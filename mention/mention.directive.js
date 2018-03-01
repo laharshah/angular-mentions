@@ -1,3 +1,10 @@
+/*
+*
+* Made changes to achieve customized search feature
+* Library had limitations to achieve this functionality at this point.
+* */
+
+
 "use strict";
 var core_1 = require("@angular/core");
 var core_2 = require("@angular/core");
@@ -145,7 +152,9 @@ var MentionDirective = (function () {
                 !event.ctrlKey &&
                 pos > this.startPos) {
                 if (event.keyCode === KEY_SPACE) {
-                    this.startPos = -1;
+                    if(this.searchString.toLowerCase().indexOf(' ') !== -1) {
+                        this.startPos = -1;
+                    }
                 }
                 else if (event.keyCode === KEY_BACKSPACE && pos > 0) {
                     this.searchList.hidden = this.stopSearch;
@@ -208,7 +217,27 @@ var MentionDirective = (function () {
             // disabling the search relies on the async operation to do the filtering
             if (!this.disableSearch && this.searchString) {
                 var searchStringLowerCase_1 = this.searchString.toLowerCase();
-                objects = this.items.filter(function (e) { return e[_this.labelKey].toLowerCase().startsWith(searchStringLowerCase_1); });
+                objects = this.items.filter(function (e) {
+                    return (
+                            (
+                                e[_this.labelKey].toLowerCase().includes(searchStringLowerCase_1) ||
+                                (
+                                    e.hasOwnProperty('username') &&
+                                    e.username.toLowerCase().includes(searchStringLowerCase_1)
+                                )
+                            ) &&
+                            (
+                                e[_this.labelKey][0].toLowerCase().startsWith(searchStringLowerCase_1[0]) ||
+                                (
+                                    e.hasOwnProperty('username') &&
+                                    e.username[0].toLowerCase().startsWith(searchStringLowerCase_1[0])
+                                )
+                            )
+                        ) ||
+                        (
+                            e[_this.labelKey].toLowerCase().substr(e[_this.labelKey].indexOf(' ') + 1).startsWith(searchStringLowerCase_1)
+                        );
+                });
             }
             matches = objects;
             if (this.maxItems > 0) {
