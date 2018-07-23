@@ -92,8 +92,8 @@ function getCaretCoordinates(element, position, options) {
     span.textContent = element.value.substring(position) || '.'; // || because a completely empty faux span doesn't render at all
     div.appendChild(span);
     var coordinates = {
-        top: span.offsetTop + parseInt(computed['borderTopWidth']),
-        left: span.offsetLeft + parseInt(computed['borderLeftWidth'])
+        top: -130,
+        left: 0
     };
     if (debug) {
         span.style.backgroundColor = '#aaa';
